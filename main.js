@@ -14,8 +14,8 @@ var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
 
-var LAYER_COUNT = 2;
-var LAYER_PLATFORM =0;
+var LAYER_COUNT = 4;
+var LAYER_PLATFORMS =0;
 var LAYER_LADDER =1;
 var MAP =  {tw: 20, th:15};
 var TILE = 35;
@@ -51,9 +51,12 @@ function cellAtTileCoord(layer, tx,ty){
 	return cells[layer][ty][tx];
 };
 
-function tileToPixel(pixel){
-	return Math.floor(pixel/TILE);
+function tileToPixel(tile){
+	return tile*TILE;
 };
+function pixelToTile(pixel){
+	return Math.floor(pixel/TILE);
+}
 
 function bound(value, min, max){
 	if (value<min){
@@ -85,7 +88,7 @@ function drawMap(){
 	}
 }
 
-var player = new Player();
+var player;
 var keyboard = new Keyboard();
 
 var cells = []; //the array that holds our simplified collision data
@@ -109,7 +112,7 @@ function initialize(){
 				idx++
 			}
 		}
-	}
+	} player = new Player();
 }
 
 // load an image to draw
@@ -123,6 +126,7 @@ var MAXDY = METER*15;
 var ACCEL = MAXDX*2;
 var FRICTION = MAXDX*6;
 var JUMP = METER*1500;
+
 function run()
 {
 	context.fillStyle = "#ccc";		
@@ -150,10 +154,10 @@ function run()
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
 	
-	initialize()
+	
 }
 
-
+initialize();
 //-------------------- Don't modify anything below here
 
 
