@@ -15,8 +15,8 @@ var fpsCount = 0;
 var fpsTime = 0;
 
 var LAYER_COUNT = 4;
-var LAYER_PLATFORMS =0;
-var LAYER_LADDER =1;
+var LAYER_PLATFORMS = 0;
+var LAYER_LADDER = 1;
 var MAP =  {tw: 20, th:15};
 var TILE = 35;
 //images are twice the size as our map's grid so we have to multiply to get a usable size
@@ -127,6 +127,8 @@ var ACCEL = MAXDX*2;
 var FRICTION = MAXDX*6;
 var JUMP = METER*1500;
 
+var heartImage = document.createElement("img")
+heartImage.src = "Static Resources/heart.png"
 function run()
 {
 	context.fillStyle = "#ccc";		
@@ -152,9 +154,13 @@ function run()
 	// draw the FPS
 	context.fillStyle = "#f00";
 	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
 	
+	context.font = "Bold Italic 24px Arial";
+	context.fillText("Lives:", 5,35,100)
 	
+	for (var i = 0; i< player.lives; i++){
+		context.drawImage(heartImage, 80 +((heartImage.width+2)*i),10)
+	}
 }
 
 initialize();
