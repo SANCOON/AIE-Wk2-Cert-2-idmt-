@@ -111,6 +111,10 @@ var player;
 var keyboard = new Keyboard();
 
 var cells = []; //the array that holds our simplified collision data
+
+var musicBackground
+var sfxShoot
+
 function initialize(){
 	for (var layerIdx = 0; layerIdx < LAYER_COUNT ; layerIdx++){	// initialize collision map
 		cells[layerIdx] = [];
@@ -132,6 +136,22 @@ function initialize(){
 			}
 		}
 	} player = new Player();
+	
+	musicBackground = new Howl({
+		urls: ["Audio Resources/background.ogg"],
+		loop: true,
+		buffer: true,
+		volume: 0.5
+	});
+	musicBackground.play();
+	
+	sfxShoot = new Howl({
+		urls: ["Audio Resources/fireEffect.ogg"],
+		loop: false,
+		bufffer:false,
+		volume: 0.75
+	})
+	
 }
 
 // load an image to draw
@@ -148,6 +168,7 @@ var JUMP = METER*1500;
 
 var heartImage = document.createElement("img")
 heartImage.src = "Static Resources/heart.png"
+
 function run()
 {
 	context.fillStyle = "#ccc";		

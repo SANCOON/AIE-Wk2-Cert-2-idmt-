@@ -206,11 +206,12 @@ Player.prototype.update = function(deltaTime){
 		lastTime= Date.now()
 		var Bullet = new bullet(this.direction, this.position)
 		bullets.push(Bullet);
+		sfxShoot.play();
 	}
 	for (var i =0; i <bullets.length; i++){
 		bullets[i].update(deltaTime)
 		bullets[i].draw()
-		if (bullets[i].position.x > canvas.width || bullets[i].position.x<0){
+		if (bullets[i].position.x > 2100 || bullets[i].position.x<0){
 			bullets.splice(i,1)
 		}
 	}
