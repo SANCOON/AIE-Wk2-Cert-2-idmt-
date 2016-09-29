@@ -10,7 +10,13 @@ var ANIM_WALK_RIGHT = 5;
 var ANIM_CLIMB = 6;
 var ANIM_MAX = 6;
 
+var bullets =[];
+	
+	var lastTime = 0
+	var currentTime = Date.now()
+	
 var Player = function() {	
+
 
 	this.sprite = new Sprite("Animation Resources/ChuckNorris.png");
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [0, 1, 2, 3, 4, 5, 6, 7]);
@@ -21,7 +27,7 @@ var Player = function() {
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]);
 
 	for(var i=0; i<ANIM_MAX; i++){
-		this.sprite.setAnimationOffset(i,-70,-87);
+		this.sprite.setAnimationOffset(i,-90,-87);
 	}
 	this.lives = 3
 	this.isAlive = true
@@ -67,7 +73,7 @@ Player.prototype.update = function(deltaTime){
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty+1);
 	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx-1, ty+1);
 	var cellladderdown = cellAtTileCoord(LAYER_LADDER, tx, ty);
-	
+	var cellladderunder = cellAtTileCoord(LAYER_LADDER, tx, ty+1);
 	//check keypress events
 	if (keyboard.isKeyDown(keyboard.KEY_A) == true){
 		left = true;
@@ -173,7 +179,7 @@ Player.prototype.update = function(deltaTime){
 		}
 	}
 	 if (cellladderdown && climb && ty >= 0){
-		 this.position.y -= 50*deltaTime
+		 this.position.y -= 200*deltaTime
 	 }
 	
 	if (this.velocity.x > 0){
@@ -194,12 +200,19 @@ Player.prototype.update = function(deltaTime){
 		this.onDeath();
 	}
 	
-	var bullets =[];
-	
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE)){
-		var Bullet = new bullet
-		Bullet.update(this.position, deltaTime)
-		Bullet.draw()
+
+	currentTime=Date.now()
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) && currentTime-lastTime > 50){
+		lastTime= Date.now()
+		var Bullet = new bullet(this.direction, this.position)
+		bullets.push(Bullet);
+	}
+	for (var i =0; i <bullets.length; i++){
+		bullets[i].update(deltaTime)
+		bullets[i].draw()
+		if (bullets[i].position.x > canvas.width || bullets[i].position.x<0){
+			bullets.splice(i,1)
+		}
 	}
 }
 
@@ -221,5 +234,5 @@ Player.prototype.onDeath= function(){
 
 Player.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x, this.position.y)
+	this.sprite.draw(context, this.position.x - worldOffSetX, this.position.y)
 }

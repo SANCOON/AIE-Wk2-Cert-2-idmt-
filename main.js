@@ -17,7 +17,7 @@ var fpsTime = 0;
 var LAYER_COUNT = 4;
 var LAYER_PLATFORMS = 0;
 var LAYER_LADDER = 1;
-var MAP =  {tw: 20, th:15};
+var MAP =  {tw: 60, th:15};
 var TILE = 35;
 //images are twice the size as our map's grid so we have to multiply to get a usable size
 var TILESET_TILE = TILE*2;
@@ -31,7 +31,7 @@ var tileset = document.createElement("img");
 tileset.src = "Level and Tileset/tileset.png"
 
 function cellAtPixelCoord(layer, x,y){
-	if (x<0 || x>SCREEN_WIDTH || y<0){
+	if ( x>SCREEN_WIDTH || y<0){
 		return 1;
 		//let the player drop off the bottom of screen
 	}
@@ -42,7 +42,7 @@ function cellAtPixelCoord(layer, x,y){
 };
 
 function cellAtTileCoord(layer, tx,ty){
-	if(tx<0 || tx>MAP.tw || ty<0){
+	if( tx>MAP.tw || ty<0){
 		return 1;
 	}
 	if (ty>= MAP.th){
@@ -68,19 +68,38 @@ function bound(value, min, max){
 	};
 	return value
 }
-
+var worldOffSetX=0
 function drawMap(){
+	
+	var startX = -1;
+	var maxTiles = Math.floor(SCREEN_WIDTH/TILE)+2;
+	var tileX = pixelToTile(player.position.x);
+	var offsetX = TILE + Math.floor(player.position.x % TILE);
+	
+	startX = tileX - Math.floor(maxTiles/2);
+	
+	if (startX<-1){
+		startX = 0
+		offsetX = 0;
+	}
+	if (startX> MAP.tw - maxTiles){
+		startX = MAP.tw - maxTiles +1
+		offsetX=TILE
+	}
+	
+	worldOffSetX = startX*TILE+offsetX;
+	
 	for(var layerIdx=0; layerIdx<LAYER_COUNT;layerIdx++){
-		var idx=0;
 		for (var y =0; y<level1.layers[layerIdx].height; y++){
-			for (var x=0; x<level1.layers[layerIdx].width; x++){
+			var idx= y*level1.layers[layerIdx].width + startX
+			for (var x=startX; x<level1.layers[layerIdx].width; x++){
 				if (level1.layers[layerIdx].data[idx] !=0){
 					// the tiles in the mat are base 1(value of zero), so subtract one from the tileset ID
 					//to get the correct tile
 					var tileIndex = level1.layers[layerIdx].data[idx]-1;
 					var sx = TILESET_PADDING +(tileIndex%TILESET_COUNT_X)*(TILESET_TILE+TILESET_PADDING);
 					var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_X))*(TILESET_TILE +TILESET_SPACING);
-					context.drawImage(tileset, sx, sy, TILESET_TILE,TILESET_TILE, x*TILE, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
+					context.drawImage(tileset, sx, sy, TILESET_TILE,TILESET_TILE, (x-startX) *TILE - offsetX, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
 				}
 				idx++;
 			}
