@@ -146,8 +146,7 @@ Player.prototype.update = function(deltaTime){
 	}
 	
 	
-	
-	// calculate the new pos amd vec
+	if (this.isAlive){	// calculate the new pos amd vec
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x +(deltaTime * this.velocity.x));
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
@@ -156,7 +155,7 @@ Player.prototype.update = function(deltaTime){
 	if ((wasLeft && (this.velocity.x > 0)) || (wasRight && (this.velocity.x < 0))){
 		// clamp velocity = 0 to stop jiggle
 	this.velocity.x = 0;
-	}
+	}}
 	
 	//if player has vertical velocity, check to see if they hit a platform below or above, if true then stop vertical velocity & clamp y pos
 	if (this.velocity.y > 0){
@@ -207,7 +206,7 @@ Player.prototype.update = function(deltaTime){
 	
 //shoot function
 	currentTime=Date.now()
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE) && currentTime-lastTime > 66 && this.bulletCount>0){
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) && currentTime-lastTime > 66 && this.bulletCount>0 && this.isAlive){
 		lastTime= Date.now()
 		var Bullet = new bullet(this.direction, this.position)
 		bullets.push(Bullet);
@@ -220,9 +219,24 @@ Player.prototype.update = function(deltaTime){
 		if (bullets[i].position.x > 2100 || bullets[i].position.x<0){
 			bullets.splice(i,1)
 		}
+		if (enemy.alive && collide(bullets[i],enemy)){
+			bullets.splice(i,1)
+			enemy.health -= 7
+			if (enemy.health < 0){
+			enemy.alive=false
+			enemy.deathByBullet=true
+			enemy.deathTime=Date.now()}
+		}
 	}
 	
-	if (currentTime - lastTime > 2000 && this.bulletCount<30 && currentTime - lastReload> 50){
+	if (collide(this,enemy) && enemy.alive){
+		this.onDeath()
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_R) && this.bulletCount != 30){
+		this.bulletCount=0
+		lastTime= Date.now()
+	}
+	if (currentTime - lastTime > 2000 && this.bulletCount==0 && currentTime - lastReload> 50){
 		this.bulletCount = 30
 		lastReload = Date.now()
 	}
@@ -245,6 +259,6 @@ Player.prototype.onDeath= function(){
 
 
 Player.prototype.draw = function()
-{
-	this.sprite.draw(context, this.position.x - worldOffSetX, this.position.y)
+{if (this.isAlive){
+this.sprite.draw(context, this.position.x - worldOffSetX, this.position.y)}
 }

@@ -10,61 +10,85 @@ var Enemy = function(x,y){
 	//this.spriteRight.offSet(-59,-83);
 	//define variables for where enemy spawns and direction
 	this.position = new Vec2();
-	this.position.set(1578, 356);
+	this.position.set(600, 356);
+	//this.position.set(100,100);
 	
 	this.velocity = new Vec2();
 	this.moveRight= true;
 	this.pauseTimer = 0;
+	this.alive = true
+	this.deathByBullet = false
+	this.deathTime=0
+	this.health = 50
 }
 var ddx =0;
+var ddy = 35*9.8*6
+
 Enemy.prototype.update = function(deltaTime){
-	var movespeed = 200;
-	if (this.pauseTimer > 0){
-		this.pauseTimer-=deltaTime;
+	var currentTime = Date.now()
+	var deathByFalling = false
+	if (this.pauseTimer>0){
+		this.pauseTimer -= deltaTime
 	}else{
-		var accelX = 0
-		
+		var ddx =0;
 		var tx = pixelToTile(this.position.x);
 		var ty = pixelToTile(this.position.y);
+		var nx = (this.position.x)%TILE
+		var ny=(this.position.y)%TILE
+		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx,ty);
+		var cellRight = cellAtTileCoord(LAYER_PLATFORMS, tx+1,ty);
+		var cellDown = cellAtTileCoord(LAYER_PLATFORMS, tx,ty+1);
+		var cellDiag = cellAtTileCoord(LAYER_PLATFORMS, tx+1,ty+1);
 		
-		//platform collision
-		cell = cellAtCoord(LAYER_PLATFORMS, tx, ty)
-		cellRight = cellAtCoord(LAYER_PLATFORMS, tx +1, ty)
-		cellDown = cellAtCoord(LAYER_PLATFORMS, tx, ty+1)
-		cellDiag = cellAtCoord(LAYER_PLATFORMS, tx-1 , ty+1)
-		
-		if (this.moveRight){
-			if(cellDiag && !cellRight){
-				ddx+=ACCEL
+		if(this.moveRight){
+			if(cellDiag &&!cellRight){
+				ddx=ddx+ACCEL;
 			}else{
-				this.velocity.zero()
-				ddx =0
-				this.pauseTimer = 500
+				this.velocity.x=0
 				this.moveRight=false
+				this.pause = 0.5;
+			}
+		}
+		if(!this.moveRight){
+			if(cellDown&&!cell){
+				ddx = ddx-ACCEL
+			}else{
+				this.velocity.x = 0
+				this.moveRight = true
+				this.pause = 0.5
+			}
+		}
+		this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+		this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
+		this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
+		this.velocity.y = bound(this.velocity.y + (deltaTime*ddy), -MAXDY, MAXDY)
+		if (cellDown){
+			this.velocity.y =0
+		}
+		if (this.position.y > canvas.height){
+			this.alive=false;
+			deathByFalling = true;
 		}
 	}
-	
-	if (!moveRight){
-		if (!cellDown && !cell){
-			ddx -= ACCEL
-		}else{
-			this.velocity.zero()
-			this.pauseTimer = 200
-			ddx = 0
-			this.moveRight= true
-		}
-		
-		this.position.y= Math.floor(this.position.y + (deltaTime*this.velocity.y))
-		this.position.x= Math.floor(this.position.x + (deltaTime*this.velocity.x))
-		this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDY)
+	if (!this.alive && deathByFalling){
+		this.position.set(600,356)
+		deathByFalling=false
+		this.alive=true
 	}
-}
+	if (!this.alive && this.deathByBullet && currentTime*this.deathTime>5000){
+		this.position.set(600,356)
+		deathByFalling=false
+		deathByBullet=false
+		this.alive=true
+		this.health = 50
+	}
 }
 
 Enemy.prototype.draw = function(){
-	//if (this.moveRight){
-		//context.drawImage(this.spriteRight, this.position.x -59, this.position.y-83)
-	//}else{
-		context.drawImage(this.spriteLeft, this.position.x-59, this.position.y-83)
-	//}
-}
+	if (this.alive){
+	if (this.moveRight){
+		context.drawImage(this.spriteRight, this.position.x -59-worldOffSetX, this.position.y-83)
+	}else{
+		context.drawImage(this.spriteLeft, this.position.x-59-worldOffSetX, this.position.y-83)
+	}
+}}

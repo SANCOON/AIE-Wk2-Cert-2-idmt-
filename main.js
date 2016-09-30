@@ -182,6 +182,7 @@ function run()
 	player.update(deltaTime);
 	player.draw();
 	drawMap();
+	enemy.update(deltaTime);
 	enemy.draw();
 	
 		
@@ -203,10 +204,13 @@ function run()
 	context.fillText("Lives:", 5,35,100)
 	
 	context.fillStyle = "#ffbb02";
+	if (player.bulletCount>0){
 	context.fillText("Bullets:", 5, 70,100)
 	context.drawImage(bulletImage, 90, 45)
 	context.fillText(" x" + player.bulletCount, 110, 70)
-	
+	}else{
+		context.fillText("Reloading...", 5, 70)
+	}
 	for (var i = 0; i< player.lives; i++){
 		context.drawImage(heartImage, 80 +((heartImage.width+2)*i),10)
 	}
