@@ -90,8 +90,8 @@ Enemy.prototype.update = function(deltaTime){
 Enemy.prototype.draw = function(){
 	if (this.alive){
 	if (this.moveRight){
-		context.drawImage(this.spriteRight, this.position.x -59-worldOffSetX, this.position.y-83)
+		context.drawImage(this.spriteRight, this.position.x -59-worldOffSetX, this.position.y-49)
 	}else{
-		context.drawImage(this.spriteLeft, this.position.x-59-worldOffSetX, this.position.y-83)
+		context.drawImage(this.spriteLeft, this.position.x-59-worldOffSetX, this.position.y-49)
 	}
 }}
