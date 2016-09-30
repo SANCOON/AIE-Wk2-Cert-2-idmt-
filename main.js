@@ -197,11 +197,7 @@ function run()
 	}		
 		
 	// draw the FPS
-	context.fillStyle = "#f00";
-	context.font="14px Arial";
 	
-	context.font = "Bold Italic 24px Arial";
-	context.fillText("Lives:", 5,35,100)
 	
 	context.fillStyle = "#ffbb02";
 	if (player.bulletCount>0){
@@ -211,8 +207,19 @@ function run()
 	}else{
 		context.fillText("Reloading...", 5, 70)
 	}
+	context.fillStyle = "#f00";
+	context.font="14px Arial";
+	context.font = "Bold Italic 24px Arial";
+	context.fillText("Lives:", 5,35,100)
+	if (player.lives>=0){
 	for (var i = 0; i< player.lives; i++){
 		context.drawImage(heartImage, 80 +((heartImage.width+2)*i),10)
+	}}
+	if(player.isAlive==false){ 
+	context.fillText("No More Lives", 80,35)
+		
+	
+	
 	}
 }
 

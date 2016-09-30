@@ -75,7 +75,7 @@ Enemy.prototype.update = function(deltaTime){
 		deathByFalling=false
 		this.alive=true
 	}
-	if (!this.alive && this.deathByBullet && currentTime*this.deathTime>5000){
+	if (!this.alive && this.deathByBullet && currentTime-this.deathTime>5000){
 		this.position.set(600,356)
 		deathByFalling=false
 		deathByBullet=false

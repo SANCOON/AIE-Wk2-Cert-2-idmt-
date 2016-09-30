@@ -216,9 +216,6 @@ Player.prototype.update = function(deltaTime){
 	for (var i =0; i <bullets.length; i++){
 		bullets[i].update(deltaTime)
 		bullets[i].draw()
-		if (bullets[i].position.x > 2100 || bullets[i].position.x<0){
-			bullets.splice(i,1)
-		}
 		if (enemy.alive && collide(bullets[i],enemy)){
 			bullets.splice(i,1)
 			enemy.health -= 7
@@ -226,7 +223,10 @@ Player.prototype.update = function(deltaTime){
 			enemy.alive=false
 			enemy.deathByBullet=true
 			enemy.deathTime=Date.now()}
+		}else if (bullets[i].position.x > 2100 || bullets[i].position.x<0){
+			bullets.splice(i,1)
 		}
+		
 	}
 	
 	if (collide(this,enemy) && enemy.alive){
