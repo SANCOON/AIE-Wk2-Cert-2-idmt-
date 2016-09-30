@@ -14,7 +14,7 @@ var bullets =[];
 	
 	var lastTime = 0
 	var currentTime = Date.now()
-	
+	var lastReload = 0
 var Player = function() {	
 
 
@@ -45,7 +45,7 @@ var Player = function() {
 	this.falling = true;
 	this.jumping = false;
 	
-	this.bulletCount = 300
+	this.bulletCount = 30
 	
 	this.direction = LEFT;
 };
@@ -220,6 +220,11 @@ Player.prototype.update = function(deltaTime){
 		if (bullets[i].position.x > 2100 || bullets[i].position.x<0){
 			bullets.splice(i,1)
 		}
+	}
+	
+	if (currentTime - lastTime > 2000 && this.bulletCount<30 && currentTime - lastReload> 50){
+		this.bulletCount = 30
+		lastReload = Date.now()
 	}
 }
 
