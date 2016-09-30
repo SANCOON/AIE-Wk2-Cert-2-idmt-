@@ -236,7 +236,7 @@ Player.prototype.update = function(deltaTime){
 		this.bulletCount=0
 		lastTime= Date.now()
 	}
-	if (currentTime - lastTime > 2000 && this.bulletCount==0 && currentTime - lastReload> 50){
+	if (currentTime - lastTime > 1500 && this.bulletCount==0 && currentTime - lastReload> 50){
 		this.bulletCount = 30
 		lastReload = Date.now()
 	}
