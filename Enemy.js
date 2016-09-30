@@ -40,22 +40,25 @@ Enemy.prototype.update = function(deltaTime){
 		var cellDown = cellAtTileCoord(LAYER_PLATFORMS, tx,ty+1);
 		var cellDiag = cellAtTileCoord(LAYER_PLATFORMS, tx+1,ty+1);
 		
+		console.log("Enemy cell height: " + ty);
+		console.log("Enemy cell x: " + tx);
+		
 		if(this.moveRight){
 			if(cellDiag &&!cellRight){
 				ddx=ddx+ACCEL;
 			}else{
 				this.velocity.x=0
 				this.moveRight=false
-				this.pause = 0.5;
+				this.pause = 1;
 			}
 		}
-		if(!this.moveRight){
-			if(cellDown&&!cell){
+		if(!this.moveRight ){
+			if(cellDown&&!cell&& tx !=0){
 				ddx = ddx-ACCEL
 			}else{
 				this.velocity.x = 0
 				this.moveRight = true
-				this.pause = 0.5
+				this.pause = 1
 			}
 		}
 		this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));

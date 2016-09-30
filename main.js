@@ -244,7 +244,22 @@ context.font = "Bold Italic 24px Arial";
 context.fillStyle = "black"
 context.fillRect(0,0, 5000,5000)
 context.fillStyle = "yellow"
-context.fillText("PAUSED (PRESS 'P' TO UNPAUSE)", canvas.width/2 - 150, canvas.height/2);
+context.fillText("PAUSED (PRESS 'P' TO UNPAUSE)", canvas.width/2 - 200, canvas.height/2);
+}
+if (!player.isAlive){
+	context.font="14px Arial";
+context.font = "Bold Italic 24px Arial";
+context.fillStyle = "black"
+context.fillRect(0,0, 5000,5000)
+context.fillStyle = "yellow"
+context.fillText("You WILL fail at life, I mean, you were given 3", canvas.width/2 - 300, canvas.height/2-100);
+context.fillText("and you STILL managed to f*ck it up. whelp,", canvas.width/2 - 300, canvas.height/2-80);
+context.fillText("the world is doomed now that Chuck Norris is dead,", canvas.width/2 - 300, canvas.height/2-60);
+context.fillText("the baddie octopusses now rules of the world", canvas.width/2 - 300, canvas.height/2-40);
+context.fillText("there are still pockets of fortified human resistance but", canvas.width/2 - 300, canvas.height/2-20);
+context.fillText("according to the octopusses, 'all the base is belong to", canvas.width/2 -300, canvas.height/2);
+context.fillText("us' and according to the resistance that still have radios,", canvas.width/2 -300, canvas.height/2+20);
+context.fillText("'They're in our base, killin' our doodes'", canvas.width/2 -300, canvas.height/2+40);
 }
 }
 
