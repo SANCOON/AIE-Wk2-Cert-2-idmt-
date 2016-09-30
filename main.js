@@ -136,6 +136,7 @@ function initialize(){
 			}
 		}
 	} player = new Player();
+	enemy = new Enemy();
 	
 	musicBackground = new Howl({
 		urls: ["Audio Resources/background.ogg"],
@@ -166,6 +167,8 @@ var ACCEL = MAXDX*2;
 var FRICTION = MAXDX*6;
 var JUMP = METER*1500;
 
+var bulletImage = document.createElement('img')
+bulletImage.src = "Static Resources/bullet - counter.png"
 var heartImage = document.createElement("img")
 heartImage.src = "Static Resources/heart.png"
 
@@ -179,6 +182,7 @@ function run()
 	player.update(deltaTime);
 	player.draw();
 	drawMap();
+	enemy.draw();
 	
 		
 	// update the frame counter 
@@ -197,6 +201,11 @@ function run()
 	
 	context.font = "Bold Italic 24px Arial";
 	context.fillText("Lives:", 5,35,100)
+	
+	context.fillStyle = "#ffbb02";
+	context.fillText("Bullets:", 5, 70,100)
+	context.drawImage(bulletImage, 90, 45)
+	context.fillText(" x" + player.bulletCount, 110, 70)
 	
 	for (var i = 0; i< player.lives; i++){
 		context.drawImage(heartImage, 80 +((heartImage.width+2)*i),10)

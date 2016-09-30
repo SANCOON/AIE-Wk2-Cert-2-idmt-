@@ -45,12 +45,15 @@ var Player = function() {
 	this.falling = true;
 	this.jumping = false;
 	
+	this.bulletCount = 300
+	
 	this.direction = LEFT;
 };
 
 Player.prototype.update = function(deltaTime){		
 	this.sprite.update(deltaTime);
 	
+	//variables for movement
 	var left = false;
 	var right = false;
 	var jump = false;
@@ -74,6 +77,7 @@ Player.prototype.update = function(deltaTime){
 	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx-1, ty+1);
 	var cellladderdown = cellAtTileCoord(LAYER_LADDER, tx, ty);
 	var cellladderunder = cellAtTileCoord(LAYER_LADDER, tx, ty+1);
+	
 	//check keypress events
 	if (keyboard.isKeyDown(keyboard.KEY_A) == true){
 		left = true;
@@ -122,6 +126,7 @@ Player.prototype.update = function(deltaTime){
 		
 	}
 	
+	//animation for jumping
 	if (jump && !this.jumping && !falling){
 		ddy = ddy - JUMP;
 		this.jumping = true;
@@ -131,7 +136,7 @@ Player.prototype.update = function(deltaTime){
 			this.sprite.setAnimation(ANIM_JUMP_RIGHT);
 		}
 	}
-	
+	//animation for ladder
 	if (cellladderdown && !climb){
 		if (this.direction == LEFT && this.sprite.currentAnimation != ANIM_IDLE_LEFT){
 			this.sprite.setAnimation(ANIM_IDLE_LEFT)
@@ -200,13 +205,14 @@ Player.prototype.update = function(deltaTime){
 		this.onDeath();
 	}
 	
-
+//shoot function
 	currentTime=Date.now()
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE) && currentTime-lastTime > 50){
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) && currentTime-lastTime > 66 && this.bulletCount>0){
 		lastTime= Date.now()
 		var Bullet = new bullet(this.direction, this.position)
 		bullets.push(Bullet);
 		sfxShoot.play();
+		this.bulletCount -=1
 	}
 	for (var i =0; i <bullets.length; i++){
 		bullets[i].update(deltaTime)
