@@ -6,7 +6,7 @@ var context = canvas.getContext("2d");
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
-
+var PkeyPressed
 // some variables to calculate the Frames Per Second (FPS - this tells use
 // how fast our game is running, and allows us to make the game run at a 
 // constant speed)
@@ -30,6 +30,7 @@ var TILESET_COUNT_Y = 14;
 var tileset = document.createElement("img");
 tileset.src = "Level and Tileset/tileset.png"
 
+var pause = false
 function cellAtPixelCoord(layer, x,y){
 	if ( x>SCREEN_WIDTH || y<0){
 		return 1;
@@ -173,11 +174,30 @@ var heartImage = document.createElement("img")
 heartImage.src = "Static Resources/heart.png"
 
 function run()
-{
+{ 
+
+if (keyboard.isKeyDown(keyboard.KEY_P)){
+	
+	if (!PkeyPressed){
+	if (pause){
+		pause = false
+		PkeyPressed =true
+	}else{
+		pause = true
+		PkeyPressed =true
+	}}
+}
+
+if (!keyboard.isKeyDown(keyboard.KEY_P)){
+	PkeyPressed= false
+}
+
+var deltaTime = getDeltaTime();
+if(!pause){
 	context.fillStyle = "#ccc";		
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	
-	var deltaTime = getDeltaTime();
+	
 	
 	player.update(deltaTime);
 	player.draw();
@@ -217,10 +237,15 @@ function run()
 	}}
 	if(player.isAlive==false){ 
 	context.fillText("No More Lives", 80,35)
-		
-	
-	
 	}
+}else{
+context.font="14px Arial";
+context.font = "Bold Italic 24px Arial";
+context.fillStyle = "black"
+context.fillRect(0,0, 5000,5000)
+context.fillStyle = "yellow"
+context.fillText("PAUSED (PRESS 'P' TO UNPAUSE)", canvas.width/2 - 150, canvas.height/2);
+}
 }
 
 initialize();
